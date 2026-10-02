@@ -95,6 +95,12 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({ onInquire })
                   alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (item.category === 'fiction') target.src = '/images/portfolio_novel_hardcover.jpg';
+                    else if (item.category === 'memoir') target.src = '/images/portfolio_memoir_book.jpg';
+                    else target.src = '/images/portfolio_poetry_anthology.jpg';
+                  }}
                 />
                 
                 {/* Hover overlay hint */}

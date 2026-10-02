@@ -5,6 +5,10 @@
  * social links, portfolio items, and business settings.
  */
 
+import novelCoverImg from '../assets/images/portfolio_novel_hardcover_1790937181176.jpg';
+import memoirCoverImg from '../assets/images/portfolio_memoir_book_1790937195004.jpg';
+import poetryCoverImg from '../assets/images/portfolio_poetry_anthology_1790937205737.jpg';
+
 export interface ServiceItem {
   id: string;
   title: string;
@@ -297,7 +301,7 @@ export const SITE_CONFIG = {
       categoryLabel: "Fiction & Novels",
       description: "Concept mockup demonstrating custom typography, foil-embossed hardcover jacket design, and interior typesetting for an atmospheric speculative novel.",
       servicesProvided: ["Book Cover Design", "Interior Layout", "Typesetting"],
-      imageUrl: "/src/assets/images/portfolio_novel_hardcover_1790937181176.jpg",
+      imageUrl: novelCoverImg,
       isSamplePlaceholder: true
     },
     {
@@ -308,7 +312,7 @@ export const SITE_CONFIG = {
       categoryLabel: "Memoir & Narrative",
       description: "Sample project showcasing warm cream minimalist cover art, chapter vignettes, and comprehensive developmental editing framework for personal memoirs.",
       servicesProvided: ["Developmental Editing", "Ebook Formatting", "Cover Art"],
-      imageUrl: "/src/assets/images/portfolio_memoir_book_1790937195004.jpg",
+      imageUrl: memoirCoverImg,
       isSamplePlaceholder: true
     },
     {
@@ -319,7 +323,7 @@ export const SITE_CONFIG = {
       categoryLabel: "Bespoke Cover Design",
       description: "Showcase mockup for an artisanal poetry collection featuring gold-leaf detailing, dark emerald texture, and delicate stanza formatting.",
       servicesProvided: ["Cover Design", "Print Formatting", "Proofreading"],
-      imageUrl: "/src/assets/images/portfolio_poetry_anthology_1790937205737.jpg",
+      imageUrl: poetryCoverImg,
       isSamplePlaceholder: true
     }
   ] as PortfolioItem[],

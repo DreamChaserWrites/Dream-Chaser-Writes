@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, BookOpen, Compass, Sparkles, Feather } from 'lucide-react';
 import { SITE_CONFIG } from '../config/siteConfig';
+import heroDeskImg from '../assets/images/hero_manuscript_desk_1790937157102.jpg';
 
 interface HeroProps {
   onExploreServices: () => void;
@@ -90,10 +91,16 @@ export const Hero: React.FC<HeroProps> = ({ onExploreServices, onStartJourney })
               {/* High-Resolution Hero Visual */}
               <div className="relative rounded-2xl overflow-hidden border border-[#D4AF37]/30 bg-[#121926] shadow-2xl group">
                 <img
-                  src="/src/assets/images/hero_manuscript_desk_1790937157102.jpg"
+                  src={heroDeskImg}
                   alt="Author's writing desk with open manuscript, vintage fountain pen, and published hardcover books"
                   className="w-full aspect-[4/3] object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src !== '/images/hero_manuscript_desk.jpg') {
+                      target.src = '/images/hero_manuscript_desk.jpg';
+                    }
+                  }}
                 />
 
                 {/* Subtle scrim overlay for atmospheric elegance */}

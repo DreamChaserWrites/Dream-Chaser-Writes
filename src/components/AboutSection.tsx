@@ -1,6 +1,7 @@
 import React from 'react';
 import { BookOpen, Compass, CheckCircle2, Feather, HeartHandshake } from 'lucide-react';
 import { SITE_CONFIG } from '../config/siteConfig';
+import aboutStudioImg from '../assets/images/about_literary_studio_1790937170143.jpg';
 
 interface AboutSectionProps {
   onStartJourney: () => void;
@@ -34,10 +35,16 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onStartJourney }) =>
           <div className="lg:col-span-6 relative">
             <div className="relative rounded-2xl overflow-hidden shadow-xl border border-neutral-200 group">
               <img
-                src="/src/assets/images/about_literary_studio_1790937170143.jpg"
+                src={aboutStudioImg}
                 alt="Dream Chaser Writes boutique publishing studio and book library"
                 className="w-full aspect-[4/3] object-cover group-hover:scale-102 transition-transform duration-700 ease-out"
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src !== '/images/about_literary_studio.jpg') {
+                    target.src = '/images/about_literary_studio.jpg';
+                  }
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-70" />
               <div className="absolute bottom-5 left-5 right-5 text-white">

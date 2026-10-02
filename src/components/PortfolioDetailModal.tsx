@@ -39,6 +39,12 @@ export const PortfolioDetailModal: React.FC<PortfolioDetailModalProps> = ({
                 alt={item.title}
                 className="w-full aspect-[3/4] object-cover"
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (item.category === 'fiction') target.src = '/images/portfolio_novel_hardcover.jpg';
+                  else if (item.category === 'memoir') target.src = '/images/portfolio_memoir_book.jpg';
+                  else target.src = '/images/portfolio_poetry_anthology.jpg';
+                }}
               />
             </div>
             {item.isSamplePlaceholder && (
