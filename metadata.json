@@ -1,0 +1,6 @@
+{
+  "name": "Dream Chaser Writes - Professional Book Services & Literary Studio",
+  "description": "Premium book writing, editing, formatting, cover design, and publishing guidance for aspiring authors and storytellers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
