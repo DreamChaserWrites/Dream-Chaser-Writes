@@ -8,7 +8,13 @@ import {
   Compass,
   Quote,
   ScrollText,
-  BookMarked
+  BookMarked,
+  Layout,
+  ShoppingBag,
+  Wrench,
+  Share2,
+  Feather,
+  Globe
 } from 'lucide-react';
 
 interface ServiceIconProps {
@@ -18,14 +24,26 @@ interface ServiceIconProps {
 
 export const ServiceIcon: React.FC<ServiceIconProps> = ({ name, className = 'w-6 h-6' }) => {
   switch (name) {
+    case 'Layout':
+      return <Layout className={className} />;
+    case 'ShoppingBag':
+      return <ShoppingBag className={className} />;
+    case 'Wrench':
+      return <Wrench className={className} />;
+    case 'Share2':
+      return <Share2 className={className} />;
+    case 'Palette':
+      return <Palette className={className} />;
+    case 'BookOpen':
+      return <BookOpen className={className} />;
+    case 'Feather':
+      return <Feather className={className} />;
+    case 'Globe':
+      return <Globe className={className} />;
     case 'PenTool':
       return <PenTool className={className} />;
     case 'FileCheck':
       return <FileCheck className={className} />;
-    case 'BookOpen':
-      return <BookOpen className={className} />;
-    case 'Palette':
-      return <Palette className={className} />;
     case 'Tablet':
       return <Tablet className={className} />;
     case 'Compass':

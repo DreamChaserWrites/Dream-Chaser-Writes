@@ -21,10 +21,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry }) => 
 
   const navItems = [
     { label: 'Services', target: 'services' },
+    { label: 'Genres', target: 'beta-genres' },
+    { label: 'Portfolio', target: 'portfolio' },
     { label: 'About', target: 'about' },
-    { label: 'Process', target: 'process' },
-    { label: 'Showcase', target: 'portfolio' },
-    { label: 'The Writer\'s Corner', target: 'blog' },
+    { label: 'Reviews', target: 'testimonials' },
+    { label: 'FAQ', target: 'faq' },
     { label: 'Contact', target: 'contact' },
   ];
 
@@ -33,69 +34,80 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry }) => 
     onNavigate(target);
   };
 
+  const whatsappUrl = `https://wa.me/+2349014111435?text=${encodeURIComponent(SITE_CONFIG.whatsappDefaultMessage)}`;
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-[#0B101B]/95 backdrop-blur-md border-b border-[#D4AF37]/20 shadow-lg'
-          : 'bg-[#0B101B]/85 backdrop-blur-sm border-b border-white/10'
+          ? 'bg-[#0f2a45]/95 backdrop-blur-md border-b border-blue-400/20 shadow-lg'
+          : 'bg-[#0f2a45]/85 backdrop-blur-sm border-b border-white/10'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        {/* Zone 1: Single text element wordmark */}
+        {/* Zone 1: Brand Wordmark (matching reference site nav-logo) */}
         <button
           onClick={() => handleLinkClick('hero')}
-          className="text-left group cursor-pointer focus:outline-none"
+          className="text-left group cursor-pointer focus:outline-none flex items-center gap-2.5"
         >
-          <span className="font-serif text-xl sm:text-2xl font-semibold tracking-wider text-[#FAF9F5] transition-colors group-hover:text-[#D4AF37]">
-            DREAM CHASER WRITES
-          </span>
+          <div className="w-9 h-9 rounded-lg bg-[#0166FE] text-white flex items-center justify-center font-bold text-sm shadow-md">
+            DC
+          </div>
+          <div className="flex flex-col text-left">
+            <span className="font-serif text-lg sm:text-xl font-bold tracking-wide text-white transition-colors group-hover:text-blue-300">
+              {SITE_CONFIG.brandName}
+            </span>
+            <span className="text-[10px] uppercase tracking-widest text-sky-400 font-medium">
+              Beta Reader · Web Designer
+            </span>
+          </div>
         </button>
 
-        {/* Zone 2: Clean text navigation links */}
-        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium tracking-wide text-neutral-300">
+        {/* Zone 2: Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium tracking-wide text-neutral-200">
           {navItems.map((item) => (
             <button
               key={item.target}
               onClick={() => handleLinkClick(item.target)}
-              className="hover:text-[#FAF9F5] transition-colors cursor-pointer py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1.5px] after:bg-[#D4AF37] hover:after:w-full after:transition-all after:duration-200"
+              className="hover:text-sky-300 transition-colors cursor-pointer py-1 relative"
             >
               {item.label}
             </button>
           ))}
         </nav>
 
-        {/* Zone 3: Primary Actions */}
-        <div className="hidden sm:flex items-center gap-4">
-          {SITE_CONFIG.whatsappNumber ? (
-            <a
-              href={`https://wa.me/${SITE_CONFIG.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(SITE_CONFIG.whatsappDefaultMessage)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-emerald-400 hover:text-emerald-300 transition-colors border border-emerald-500/30 rounded-lg hover:border-emerald-500/50"
-            >
-              <MessageCircle className="w-3.5 h-3.5" />
-              <span>WhatsApp</span>
-            </a>
-          ) : null}
+        {/* Zone 3: Actions */}
+        <div className="hidden sm:flex items-center gap-3">
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-emerald-300 hover:text-white bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 rounded-lg transition-all"
+          >
+            <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+            <span>WhatsApp</span>
+          </a>
 
           <button
             onClick={() => onOpenInquiry()}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-wide uppercase text-[#0B101B] bg-gradient-to-r from-[#D4AF37] via-[#E6C665] to-[#D4AF37] hover:brightness-110 active:brightness-95 rounded-lg shadow-md transition-all duration-200 cursor-pointer whitespace-nowrap"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-wide uppercase text-white bg-[#0166FE] hover:bg-blue-600 rounded-lg shadow-md transition-all cursor-pointer whitespace-nowrap"
           >
-            <span>Start Your Book Journey</span>
+            <span>Start a Project</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {/* Mobile Hamburger Toggle */}
         <div className="flex sm:hidden items-center gap-2">
-          <button
-            onClick={() => onOpenInquiry()}
-            className="px-3 py-1.5 text-xs font-medium bg-[#D4AF37] text-[#0B101B] rounded-md font-semibold"
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 text-emerald-400 hover:text-white"
+            aria-label="WhatsApp"
           >
-            Inquire
-          </button>
+            <MessageCircle className="w-5 h-5" />
+          </a>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-neutral-300 hover:text-white rounded-lg hover:bg-white/5 transition-colors focus:outline-none"
@@ -107,31 +119,37 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry }) => 
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#0B101B] border-b border-[#D4AF37]/20 px-5 pt-3 pb-6 space-y-3 animate-fadeIn">
+        <div className="lg:hidden bg-[#0f2a45] border-b border-blue-500/20 px-5 pt-3 pb-6 space-y-3 animate-fadeIn text-left">
           {navItems.map((item) => (
             <button
               key={item.target}
               onClick={() => handleLinkClick(item.target)}
-              className="block w-full text-left py-2.5 text-base font-medium text-neutral-200 hover:text-[#D4AF37] border-b border-white/5 transition-colors"
+              className="block w-full text-left py-2.5 text-base font-medium text-neutral-200 hover:text-blue-300 border-b border-white/5 transition-colors"
             >
               {item.label}
             </button>
           ))}
           <div className="pt-3 flex flex-col gap-2.5">
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 flex items-center justify-center gap-2 text-xs font-semibold tracking-wider uppercase text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-lg"
+            >
+              <MessageCircle className="w-4 h-4 text-emerald-400" />
+              <span>WhatsApp (+2349014111435)</span>
+            </a>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenInquiry();
               }}
-              className="w-full py-3 text-center text-xs font-semibold tracking-wider uppercase text-[#0B101B] bg-[#D4AF37] hover:bg-[#E6C665] rounded-lg transition-colors"
+              className="w-full py-3 text-center text-xs font-semibold tracking-wider uppercase text-white bg-[#0166FE] hover:bg-blue-600 rounded-lg transition-colors cursor-pointer"
             >
-              Start Your Book Journey
+              Start a Project
             </button>
-            <div className="text-center text-xs text-neutral-400 pt-1">
-              <span>Official Literary Studio</span>
-            </div>
           </div>
         </div>
       )}

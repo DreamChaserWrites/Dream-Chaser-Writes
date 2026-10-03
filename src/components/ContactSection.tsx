@@ -8,8 +8,7 @@ import {
   Clock,
   MapPin,
   Shield,
-  HelpCircle,
-  Sparkles
+  ArrowRight
 } from 'lucide-react';
 import { SITE_CONFIG } from '../config/siteConfig';
 
@@ -25,11 +24,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
-  const [service, setService] = useState(initialService || SITE_CONFIG.services[0]?.title || '');
-  const [bookTitle, setBookTitle] = useState('');
-  const [description, setDescription] = useState('');
+  // Beta reading first as default!
+  const [service, setService] = useState(initialService || 'Beta Reading: Full Diagnostic Report');
+  const [manuscriptGenre, setManuscriptGenre] = useState('Romance & Romantasy');
   const [budget, setBudget] = useState('');
-  const [preferredContact, setPreferredContact] = useState<'Email' | 'WhatsApp' | 'Phone'>('Email');
+  const [description, setDescription] = useState('');
+  const [preferredContact, setPreferredContact] = useState<'WhatsApp' | 'Email'>('WhatsApp');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -39,7 +39,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     submittedAt: string;
   } | null>(null);
 
-  // Sync initialService if changed from parent
   useEffect(() => {
     if (initialService) {
       setService(initialService);
@@ -50,7 +49,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     e.preventDefault();
     setErrorMessage(null);
 
-    // Frontend validation
     if (!fullName.trim() || fullName.trim().length < 2) {
       setErrorMessage('Please enter your full name.');
       return;
@@ -58,17 +56,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim() || !emailRegex.test(email.trim())) {
-      setErrorMessage('Please enter a valid email address so we can reply.');
-      return;
-    }
-
-    if (!service) {
-      setErrorMessage('Please select a service of interest.');
+      setErrorMessage('Please enter a valid email address.');
       return;
     }
 
     if (!description.trim() || description.trim().length < 10) {
-      setErrorMessage('Please provide a brief description of your project (minimum 10 characters).');
+      setErrorMessage('Please describe your project (minimum 10 characters).');
       return;
     }
 
@@ -84,8 +77,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
           fullName: fullName.trim(),
           email: email.trim(),
           whatsapp: whatsapp.trim() || null,
-          service,
-          bookTitle: bookTitle.trim() || null,
+          service: `${service} (Genre: ${manuscriptGenre})`,
           description: description.trim(),
           budget: budget.trim() || null,
           preferredContact
@@ -116,255 +108,334 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     setEmail('');
     setWhatsapp('');
     setDescription('');
-    setBookTitle('');
     setBudget('');
     setErrorMessage(null);
   };
 
-  // WhatsApp link logic
-  const hasWhatsapp = Boolean(SITE_CONFIG.whatsappNumber && SITE_CONFIG.whatsappNumber.trim().length > 4);
-  const whatsappUrl = hasWhatsapp
-    ? `https://wa.me/${SITE_CONFIG.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(SITE_CONFIG.whatsappDefaultMessage)}`
-    : null;
+  const whatsappDirectUrl = `https://wa.me/+2349014111435?text=${encodeURIComponent(SITE_CONFIG.whatsappDefaultMessage)}`;
 
   return (
-    <section id="contact" className="py-24 bg-[#FAF9F5] text-[#1E232A] relative">
+    <section id="contact" className="py-24 bg-[#0f2a45] text-[#FAF9F5] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
-        <div className="max-w-3xl mb-16 text-left">
-          <div className="flex items-center gap-3 text-xs tracking-widest uppercase text-[#967417] font-semibold mb-3">
-            <span className="w-6 h-[1.5px] bg-[#967417]" />
-            <span>Begin Your Project</span>
-          </div>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-[#0B101B] mb-4">
-            Let's Discuss Your Book
+        {/* Header matching reference site */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <span className="text-xs uppercase tracking-widest text-[#6BA5FF] font-bold block mb-2">
+            Get in Touch
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-3">
+            Let's Build Something <br />
+            <span className="text-[#6BA5FF]">Amazing Together</span>
           </h2>
-          <p className="text-base sm:text-lg text-neutral-600 font-light leading-relaxed">
-            Whether you have an outline, a completed first draft, or need complete guidance from step one, submit your inquiry below. We review every brief thoroughly and reply within 1–2 business days.
+          <div className="w-12 h-1 bg-[#0166FE] rounded mx-auto mb-3" />
+          <p className="text-sm text-neutral-300 font-light leading-relaxed max-w-lg mx-auto">
+            Ready to start a project or have a question? Reach out — I typically respond within a few hours.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 text-left">
           
-          {/* Form Column */}
+          {/* Left Column (.rv-l): Preferred WhatsApp & Contact Card */}
+          <div className="lg:col-span-5 space-y-5">
+            
+            <div className="p-6 sm:p-7 rounded-2xl bg-[#173E63] border border-white/10 shadow-xl space-y-4">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-sky-300">
+                Preferred Contact
+              </p>
+
+              {/* Direct WhatsApp Card (matching reference site layout) */}
+              <a
+                href={whatsappDirectUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 p-4 rounded-xl bg-[#25D366]/15 border border-[#25D366]/40 hover:bg-[#25D366]/25 transition-all group"
+              >
+                <div className="w-12 h-12 rounded-xl bg-[#25D366]/20 text-[#25D366] flex items-center justify-center shrink-0">
+                  <MessageCircle className="w-6 h-6 fill-[#25D366]" />
+                </div>
+                <div>
+                  <p className="text-[11px] uppercase tracking-wider text-neutral-300 font-semibold">
+                    WhatsApp (Direct)
+                  </p>
+                  <p className="text-base font-extrabold text-white group-hover:text-emerald-300 transition-colors">
+                    +2349014111435
+                  </p>
+                  <p className="text-xs text-neutral-300 font-light">
+                    Tap to open WhatsApp chat
+                  </p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:text-white group-hover:translate-x-1 transition-all ml-auto" />
+              </a>
+
+              {/* Email Detail */}
+              <div className="pt-3 border-t border-white/10 flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+                  <Mail className="w-5 h-5 text-sky-300" />
+                </div>
+                <div>
+                  <p className="text-[11px] uppercase tracking-wider text-neutral-300 font-semibold">
+                    Email Address
+                  </p>
+                  <a
+                    href={`mailto:${SITE_CONFIG.contactEmail}`}
+                    className="text-sm font-bold text-white hover:text-sky-300 transition-colors"
+                  >
+                    {SITE_CONFIG.contactEmail}
+                  </a>
+                </div>
+              </div>
+
+              {/* Location & Hours */}
+              <div className="pt-3 border-t border-white/10 flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+                  <MapPin className="w-5 h-5 text-sky-300" />
+                </div>
+                <div>
+                  <p className="text-[11px] uppercase tracking-wider text-neutral-300 font-semibold">
+                    Availability & Location
+                  </p>
+                  <p className="text-xs text-neutral-200">
+                    {SITE_CONFIG.businessLocation} · {SITE_CONFIG.businessHours}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Reassurance note */}
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs text-neutral-300 flex items-center gap-3">
+              <Shield className="w-4 h-4 text-sky-300 shrink-0" />
+              <span>All manuscripts, briefs, and client data are treated with strict confidentiality.</span>
+            </div>
+
+          </div>
+
+          {/* Right Column: Contact Form */}
           <div className="lg:col-span-7">
-            <div className="bg-white p-7 sm:p-10 rounded-2xl border border-neutral-200/90 shadow-lg">
+            <div className="p-7 sm:p-9 rounded-2xl bg-[#173E63] border border-white/10 shadow-2xl">
               
               {successData ? (
-                /* Success State */
-                <div className="text-left space-y-6 py-4 animate-fadeIn">
-                  <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center">
+                <div className="space-y-6 py-4 animate-fadeIn text-left">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
-
                   <div>
-                    <span className="text-xs font-mono uppercase tracking-wider text-emerald-700 bg-emerald-100/60 px-2.5 py-1 rounded">
+                    <span className="text-xs font-mono uppercase tracking-wider text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded">
                       Inquiry Received · Ref: {successData.inquiryId}
                     </span>
-                    <h3 className="font-serif text-2xl sm:text-3xl font-medium text-[#0B101B] mt-3 mb-2">
-                      Thank You for Reaching Out
+                    <h3 className="font-serif text-2xl font-bold text-white mt-3 mb-2">
+                      Message Sent Successfully
                     </h3>
-                    <p className="text-sm text-neutral-600 leading-relaxed font-light">
+                    <p className="text-sm text-neutral-200 font-light leading-relaxed">
                       {successData.message}
                     </p>
                   </div>
 
-                  <div className="p-5 rounded-xl bg-neutral-50 border border-neutral-200 text-xs space-y-2 text-neutral-600">
-                    <div className="flex justify-between">
-                      <span className="font-medium text-neutral-800">Selected Service:</span>
-                      <span>{service}</span>
-                    </div>
-                    {bookTitle && (
-                      <div className="flex justify-between">
-                        <span className="font-medium text-neutral-800">Book Working Title:</span>
-                        <span>{bookTitle}</span>
-                      </div>
-                    )}
-                    <div className="flex justify-between">
-                      <span className="font-medium text-neutral-800">Preferred Reply Method:</span>
-                      <span>{preferredContact}</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-2">
+                  <div className="flex flex-wrap gap-3">
+                    <a
+                      href={whatsappDirectUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-[#25D366] hover:bg-[#20ba5a] rounded-lg transition-colors flex items-center gap-2"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-white" />
+                      <span>Follow up on WhatsApp (+2349014111435)</span>
+                    </a>
                     <button
                       onClick={handleReset}
-                      className="px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-[#0B101B] bg-neutral-200 hover:bg-neutral-300 rounded-lg transition-colors cursor-pointer"
+                      className="px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-white/10 hover:bg-white/20 rounded-lg transition-colors cursor-pointer"
                     >
-                      Submit Another Inquiry
+                      Send Another
                     </button>
                   </div>
                 </div>
               ) : (
-                /* Interactive Inquiry Form */
-                <form onSubmit={handleSubmit} className="space-y-6 text-left">
+                <form onSubmit={handleSubmit} className="space-y-4 text-left">
                   
                   {errorMessage && (
-                    <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-3">
+                    <div className="p-3.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-200 text-xs flex items-start gap-2.5">
                       <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
                       <span>{errorMessage}</span>
                     </div>
                   )}
 
-                  {/* Row 1: Full Name & Email */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* Row 1: Name & Email */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="fullName" className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 mb-1.5">
-                        Full Name <span className="text-red-500">*</span>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-200 mb-1.5">
+                        Full Name <span className="text-red-400">*</span>
                       </label>
                       <input
                         type="text"
-                        id="fullName"
                         required
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        placeholder="e.g. Eleanor Vance"
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-300 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none text-sm text-neutral-900 bg-[#FAF9F5]/40 transition-colors"
+                        placeholder="Your name"
+                        className="w-full px-4 py-3 rounded-xl border border-white/15 focus:border-[#6BA5FF] focus:ring-2 focus:ring-blue-400/20 outline-none text-sm text-white bg-[#0f2a45] transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 mb-1.5">
-                        Email Address <span className="text-red-500">*</span>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-200 mb-1.5">
+                        Email Address <span className="text-red-400">*</span>
                       </label>
                       <input
                         type="email"
-                        id="email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="you@domain.com"
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-300 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none text-sm text-neutral-900 bg-[#FAF9F5]/40 transition-colors"
+                        placeholder="your@email.com"
+                        className="w-full px-4 py-3 rounded-xl border border-white/15 focus:border-[#6BA5FF] focus:ring-2 focus:ring-blue-400/20 outline-none text-sm text-white bg-[#0f2a45] transition-colors"
                       />
                     </div>
                   </div>
 
-                  {/* Row 2: WhatsApp Number & Preferred Contact */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* Row 2: Service of Interest (BETA READING FIRST!) */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-neutral-200 mb-1.5">
+                      Service of Interest <span className="text-red-400">*</span>
+                    </label>
+                    <select
+                      value={service}
+                      onChange={(e) => setService(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl border border-white/15 focus:border-[#6BA5FF] focus:ring-2 focus:ring-blue-400/20 outline-none text-sm text-white bg-[#0f2a45] transition-colors cursor-pointer"
+                    >
+                      {/* Segment 1: BETA READING & BOOK SERVICE */}
+                      <optgroup label="1. BETA READING & BOOK SERVICE">
+                        <option value="Beta Reading: Full Diagnostic Report">Beta Reading: Full Diagnostic Report</option>
+                        <option value="Beta Reading: Developmental Manuscript Critique">Beta Reading: Developmental Manuscript Critique</option>
+                        <option value="Book Services: Interior Layout & Kindle Formatting">Book Services: Interior Layout & Kindle Formatting</option>
+                      </optgroup>
+
+                      {/* Segment 2: SOCIAL MEDIA MANAGEMENT & BRAND GROWTH */}
+                      <optgroup label="2. SOCIAL MEDIA MANAGEMENT & BRAND GROWTH">
+                        <option value="Social Media: Monthly Management">Social Media: Monthly Management</option>
+                        <option value="Social Media: Feed Aesthetics & Content Suite">Social Media: Feed Aesthetics & Content Suite</option>
+                        <option value="Social Media: Launch Campaign Strategy">Social Media: Launch Campaign Strategy</option>
+                      </optgroup>
+
+                      {/* Segment 3: WEBSITE DESIGN ON ANY CMS PLATFORM */}
+                      <optgroup label="3. WEBSITE DESIGN ON ANY CMS PLATFORM">
+                        <option value="Website Design: WordPress">Website Design: WordPress</option>
+                        <option value="Website Design: Shopify Online Store">Website Design: Shopify Online Store</option>
+                        <option value="Website Design: Webflow">Website Design: Webflow</option>
+                        <option value="Website Design: Squarespace">Website Design: Squarespace</option>
+                        <option value="Website Design: Wix">Website Design: Wix</option>
+                        <option value="Website Design: Author / Personal Portfolio">Website Design: Author / Personal Portfolio</option>
+                        <option value="Website Design: Business / Corporate">Website Design: Business / Corporate</option>
+                        <option value="Website Redesign / Speed & Bug Fixing">Website Redesign / Speed & Bug Fixing</option>
+                      </optgroup>
+
+                      <optgroup label="Multi-Pillar Package">
+                        <option value="Bundle: Author Website + Beta Reading">Bundle: Author Website + Beta Reading</option>
+                        <option value="Bundle: Website + Social Media">Bundle: Website + Social Media</option>
+                        <option value="Other Custom Project">Other Custom Project</option>
+                      </optgroup>
+                    </select>
+                  </div>
+
+                  {/* Manuscript Genre Selector (Covers all 15 genres requested) */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5 flex items-center justify-between">
+                      <span>Manuscript Genre Specialization</span>
+                      <span className="text-[10px] text-neutral-400 font-normal">All 15+ Genres Evaluated</span>
+                    </label>
+                    <select
+                      value={manuscriptGenre}
+                      onChange={(e) => setManuscriptGenre(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl border border-amber-400/40 focus:border-amber-300 focus:ring-2 focus:ring-amber-400/20 outline-none text-sm text-white bg-[#0f2a45] transition-colors cursor-pointer font-medium"
+                    >
+                      <option value="Fiction & Nonfiction">Fiction & Nonfiction (General, Memoirs, Essays)</option>
+                      <option value="Romance">Romance (Slow Burn, Enemies-to-Lovers, Dark Romance)</option>
+                      <option value="Fantasy">Fantasy (High / Epic, Urban, Low, Cosy)</option>
+                      <option value="Sci-Fi">Sci-Fi (Hard Sci-Fi, Space Opera, Cyberpunk, Dystopian)</option>
+                      <option value="Mystery">Mystery (Whodunit, Cozy, Detective, Locked-Room)</option>
+                      <option value="Thriller">Thriller (Psychological, Legal, Action, Ticking-Clock)</option>
+                      <option value="Horror">Horror (Supernatural, Psychological, Cosmic, Gothic)</option>
+                      <option value="Historical Fiction">Historical Fiction (Regency, WWII, Medieval, Ancient)</option>
+                      <option value="Literary Fiction">Literary Fiction (Prose Aesthetics, Deep Character Arc)</option>
+                      <option value="Young Adult (YA)">Young Adult (YA Voice, Coming-of-Age, Urgency)</option>
+                      <option value="Contemporary">Contemporary (Modern Life, Family, Workplace)</option>
+                      <option value="Crime">Crime (Heists, Mob, Noir, Procedural)</option>
+                      <option value="Adventure">Adventure (Survival, Quests, Kinetic Action)</option>
+                      <option value="Paranormal & More">Paranormal & More (Shifters, Vampires, Witches)</option>
+                      <option value="Cross-Genre Blend / Hybrid">Cross-Genre Blend / Hybrid</option>
+                      <option value="Non-Book / Web Project">Not Applicable (Website / Social Project)</option>
+                    </select>
+                  </div>
+
+                  {/* Row 3: WhatsApp & Budget */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="whatsapp" className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 mb-1.5">
-                        WhatsApp Number <span className="text-neutral-400 font-normal">(Optional)</span>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-200 mb-1.5">
+                        Your WhatsApp Number <span className="text-neutral-400 font-normal">(Optional)</span>
                       </label>
                       <input
                         type="tel"
-                        id="whatsapp"
                         value={whatsapp}
                         onChange={(e) => setWhatsapp(e.target.value)}
-                        placeholder="+1 (555) 000-0000"
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-300 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none text-sm text-neutral-900 bg-[#FAF9F5]/40 transition-colors"
+                        placeholder="e.g. +234..."
+                        className="w-full px-4 py-3 rounded-xl border border-white/15 focus:border-[#6BA5FF] focus:ring-2 focus:ring-blue-400/20 outline-none text-sm text-white bg-[#0f2a45] transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label htmlFor="preferredContact" className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 mb-1.5">
-                        Preferred Contact Method
-                      </label>
-                      <select
-                        id="preferredContact"
-                        value={preferredContact}
-                        onChange={(e) => setPreferredContact(e.target.value as any)}
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-300 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none text-sm text-neutral-900 bg-[#FAF9F5]/40 transition-colors cursor-pointer"
-                      >
-                        <option value="Email">Email</option>
-                        <option value="WhatsApp">WhatsApp</option>
-                        <option value="Phone">Phone Call</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Row 3: Service of Interest & Working Title */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label htmlFor="service" className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 mb-1.5">
-                        Service of Interest <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        id="service"
-                        required
-                        value={service}
-                        onChange={(e) => setService(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-300 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none text-sm text-neutral-900 bg-[#FAF9F5]/40 transition-colors cursor-pointer"
-                      >
-                        {SITE_CONFIG.services.map((srv) => (
-                          <option key={srv.id} value={srv.title}>
-                            {srv.title}
-                          </option>
-                        ))}
-                        <option value="Full Book Publishing Package">Full Book Publishing Package</option>
-                        <option value="General Literary Inquiry / Other">General Literary Inquiry / Other</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label htmlFor="bookTitle" className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 mb-1.5">
-                        Book Working Title <span className="text-neutral-400 font-normal">(Optional)</span>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-200 mb-1.5">
+                        Estimated Budget <span className="text-neutral-400 font-normal">(Optional)</span>
                       </label>
                       <input
                         type="text"
-                        id="bookTitle"
-                        value={bookTitle}
-                        onChange={(e) => setBookTitle(e.target.value)}
-                        placeholder="e.g. Chronicles of the Meadow"
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-300 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none text-sm text-neutral-900 bg-[#FAF9F5]/40 transition-colors"
+                        value={budget}
+                        onChange={(e) => setBudget(e.target.value)}
+                        placeholder="e.g. $300 – $1,000 / Flexible"
+                        className="w-full px-4 py-3 rounded-xl border border-white/15 focus:border-[#6BA5FF] focus:ring-2 focus:ring-blue-400/20 outline-none text-sm text-white bg-[#0f2a45] transition-colors"
                       />
                     </div>
                   </div>
 
-                  {/* Estimated Budget */}
+                  {/* Message */}
                   <div>
-                    <label htmlFor="budget" className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 mb-1.5">
-                      Estimated Budget / Investment Range <span className="text-neutral-400 font-normal">(Optional)</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="budget"
-                      value={budget}
-                      onChange={(e) => setBudget(e.target.value)}
-                      placeholder="e.g. Flexible / $500 – $1,500 / Requesting Quote"
-                      className="w-full px-4 py-3 rounded-xl border border-neutral-300 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none text-sm text-neutral-900 bg-[#FAF9F5]/40 transition-colors"
-                    />
-                  </div>
-
-                  {/* Project Description */}
-                  <div>
-                    <label htmlFor="description" className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 mb-1.5">
-                      Project Description & Goals <span className="text-red-500">*</span>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-neutral-200 mb-1.5">
+                      Your Message / Manuscript Details <span className="text-red-400">*</span>
                     </label>
                     <textarea
-                      id="description"
                       required
                       rows={4}
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      placeholder="Tell us about your book genre, current progress (concept, partial draft, or finished manuscript), estimated word count, and what kind of support you are seeking."
-                      className="w-full px-4 py-3 rounded-xl border border-neutral-300 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none text-sm text-neutral-900 bg-[#FAF9F5]/40 transition-colors leading-relaxed"
+                      placeholder="Tell me about your project: manuscript genre & word count (if beta reading), preferred CMS platform (if website), or social goals."
+                      className="w-full px-4 py-3 rounded-xl border border-white/15 focus:border-[#6BA5FF] focus:ring-2 focus:ring-blue-400/20 outline-none text-sm text-white bg-[#0f2a45] transition-colors leading-relaxed"
                     />
                   </div>
 
-                  {/* Privacy Notice */}
-                  <div className="flex items-start gap-2.5 text-xs text-neutral-500">
-                    <Shield className="w-4 h-4 text-[#967417] mt-0.5 shrink-0" />
-                    <span>
-                      Your manuscript details and personal information are strictly confidential and will never be shared or used for any purpose other than evaluating your project inquiry.
-                    </span>
-                  </div>
-
-                  {/* Submit Button */}
+                  {/* Submit Button matching reference site */}
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 text-xs font-semibold tracking-wider uppercase text-[#0B101B] bg-gradient-to-r from-[#D4AF37] via-[#E4C569] to-[#D4AF37] hover:brightness-110 active:brightness-95 rounded-xl shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="w-full py-4 text-xs font-bold tracking-wider uppercase text-white bg-[#0166FE] hover:bg-blue-600 rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     {isSubmitting ? (
-                      <span>Submitting Inquiry...</span>
+                      <span>Sending Message...</span>
                     ) : (
                       <>
-                        <span>Submit Project Inquiry</span>
-                        <Send className="w-4 h-4" />
+                        <span>Send Message</span>
+                        <ArrowRight className="w-4 h-4" />
                       </>
                     )}
                   </button>
+
+                  <div className="pt-1 text-center">
+                    <span className="text-xs text-neutral-300">
+                      Or chat directly on WhatsApp:{' '}
+                      <a
+                        href={whatsappDirectUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#25D366] hover:underline font-bold"
+                      >
+                        +2349014111435
+                      </a>
+                    </span>
+                  </div>
 
                 </form>
               )}
@@ -372,103 +443,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             </div>
           </div>
 
-          {/* Right Information Column */}
-          <div className="lg:col-span-5 space-y-8 text-left">
-            
-            {/* Direct Contact Card */}
-            <div className="p-8 rounded-2xl bg-[#0B101B] text-white border border-[#D4AF37]/30 shadow-xl space-y-6">
-              <div>
-                <span className="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold block mb-1">
-                  Direct Communications
-                </span>
-                <h3 className="font-serif text-2xl font-medium text-white">
-                  Studio Inquiry Desk
-                </h3>
-              </div>
-
-              <div className="space-y-4 text-sm text-neutral-300 font-light">
-                <div className="flex items-start gap-3.5">
-                  <Mail className="w-5 h-5 text-[#D4AF37] mt-0.5 shrink-0" />
-                  <div>
-                    <span className="text-xs text-neutral-400 block font-normal">Official Email</span>
-                    <a
-                      href={`mailto:${SITE_CONFIG.contactEmail}`}
-                      className="text-white hover:text-[#D4AF37] transition-colors font-medium"
-                    >
-                      {SITE_CONFIG.contactEmail}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5">
-                  <Clock className="w-5 h-5 text-[#D4AF37] mt-0.5 shrink-0" />
-                  <div>
-                    <span className="text-xs text-neutral-400 block font-normal">Consultation Hours</span>
-                    <span>{SITE_CONFIG.businessHours}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5">
-                  <MapPin className="w-5 h-5 text-[#D4AF37] mt-0.5 shrink-0" />
-                  <div>
-                    <span className="text-xs text-neutral-400 block font-normal">Service Scope</span>
-                    <span>{SITE_CONFIG.businessLocation}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* WhatsApp direct chat button */}
-              <div className="pt-4 border-t border-white/10">
-                <span className="text-xs text-neutral-400 block mb-2 font-light">
-                  Prefer instant messaging?
-                </span>
-                {hasWhatsapp && whatsappUrl ? (
-                  <a
-                    href={whatsappUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold tracking-wider uppercase transition-colors shadow-md"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    <span>Chat on WhatsApp</span>
-                  </a>
-                ) : (
-                  <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs text-neutral-300 space-y-2">
-                    <div className="flex items-center gap-2 text-emerald-400 font-medium">
-                      <MessageCircle className="w-4 h-4" />
-                      <span>WhatsApp Inquiries</span>
-                    </div>
-                    <p className="text-[11px] text-neutral-400">
-                      WhatsApp direct chat is ready. Enter your phone number in <code className="text-[#D4AF37]">siteConfig.ts</code> to activate one-click messaging for your readers.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Integration Notice & Confidence Guarantee */}
-            <div className="p-6 rounded-2xl bg-white border border-neutral-200/90 shadow-sm space-y-3">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-800 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#967417]" />
-                <span>Backend Submission Guarantee</span>
-              </h4>
-              <p className="text-xs text-neutral-600 leading-relaxed font-light">
-                Inquiries submitted here are validated server-side and recorded immediately in the system log. If you connect an automated email service like Formspree or SendGrid, alerts will be instantly routed to your personal inbox.
-              </p>
-              {onOpenConfigGuide && (
-                <button
-                  onClick={onOpenConfigGuide}
-                  className="text-xs font-medium text-[#967417] hover:underline flex items-center gap-1 pt-1 cursor-pointer"
-                >
-                  <HelpCircle className="w-3.5 h-3.5" />
-                  <span>View Customization & Deployment Guide</span>
-                </button>
-              )}
-            </div>
-
-          </div>
-
         </div>
+
       </div>
     </section>
   );
